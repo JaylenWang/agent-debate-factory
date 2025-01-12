@@ -11,7 +11,7 @@ model_map = {
     "google/gemini-pro-1.5": "GeminiPro15",
     "google/gemini-flash-1.5": "GeminiFlash15",
     "anthropic/claude-3-haiku": "ClaudeHaiku3",
-    "anthropic/claude-3.5-sonnet": "ClaudeSonnet35",
+    "claude-3-5-sonnet-20241022": "ClaudeSonnet35",
     "gpt-4o-mini": "GPT4oMini",
     "gpt-4o": "GPT4o",
     "deepseek-chat": "DeepSeekChat",

@@ -68,8 +68,8 @@ CANDIDATE_MODEL_LIST = [
     "google/gemini-flash-1.5",
     "anthropic/claude-3-haiku",
     "anthropic/claude-3.5-sonnet",
-    "openai/gpt-4o-mini",
-    "openai/gpt-4o",
+    "gpt-4o-mini",
+    "gpt-4o",
     "glm-4-air",
     # open
     "deepseek-chat",

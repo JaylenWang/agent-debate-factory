@@ -7,6 +7,11 @@ from datetime import datetime
 
 def init_db(force: bool = False):
     db_name = ".cache/search.db"
+
+    if not os.path.exists(".cache/search.db"):
+        if not os.path.exists(".cache"):
+            os.makedirs(".cache")
+        os.mknod(".cache/search.db")
     
     if force and os.path.exists(".cache/search.db"):
         os.remove(".cache/search.db")

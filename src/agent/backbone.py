@@ -1,4 +1,5 @@
 import json
+import os
 import warnings
 from abc import ABC, abstractmethod
 from typing import Dict, List
@@ -108,6 +109,10 @@ class BaseAgent(ABC):
             chat_history= result.chat_history,
             cost= result.cost,
         )
+        if not os.path.exists("log/agent/log.jsonl"):
+            if not os.path.exists("log/agent"):
+                os.makedirs("log/agent", exist_ok=True)
+            os.mknod("log/agent/log.jsonl")
         with open("log/agent/log.jsonl", "a") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
           

@@ -8,6 +8,7 @@ import yaml
 from src.agent import (ArgumentAgent, CustomDebateUserProxyAgent,
                        RebuttalAgent, Role, SummaryAgent)
 from src.app import create_app
+from src.agent.database.db import init_db
 
 
 def get_args():
@@ -68,6 +69,8 @@ rebuttal_config = yaml.load(
 summary_config = yaml.load(
     open("config/summary.yaml", 'r'), Loader=yaml.FullLoader
 )
+
+init_db()
 
 # load prompt
 searcher = Role("searcher", prompt_map=argument_config.get("searcher"), llm_config=llm_config, seed=config.seed)

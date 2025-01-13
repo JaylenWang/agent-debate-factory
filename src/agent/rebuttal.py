@@ -63,13 +63,14 @@ class RebuttalAgent(BaseAgent):
     def postprocess(self, result) -> str:
         result = result.split("<rebuttal>")
         if len(result) > 1:
-            result = result[1]
+            result = result[1].split("</rebuttal>")[0]
         else:
             result = result[0]
         result = result.replace("FINISHED", "")
         result = result.replace("SEARCH", "")
         result = result.replace("REVISION", "")
         result = result.replace("<output>", "").replace("</output>", "").replace("<rebuttal>", "").replace("</rebuttal>", "")
+        result = result.strip()
         
         return result
     

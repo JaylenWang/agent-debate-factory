@@ -65,7 +65,7 @@ class SummaryAgent(BaseAgent):
     def postprocess(self, result) -> str:
         result = result.split("<output>")
         if len(result) > 1:
-            result = result[1]
+            result = result[1].split("</output>")[0]
         else:
             result = result[0]
             
@@ -73,6 +73,7 @@ class SummaryAgent(BaseAgent):
         result = result.replace("SEARCH", "")
         result = result.replace("REVISION", "")
         result = result.replace("<output>", "").replace("</output>", "")
+        result = result.strip()
         
         return result
     

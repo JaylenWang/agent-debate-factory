@@ -10,7 +10,7 @@ def calculate_id(file_root):
 model_map = {
     "google/gemini-pro-1.5": "GeminiPro15",
     "google/gemini-flash-1.5": "GeminiFlash15",
-    "anthropic/claude-3-haiku": "ClaudeHaiku3",
+    "claude-3-5-haiku-20241022": "ClaudeHaiku3",
     "claude-3-5-sonnet-20241022": "ClaudeSonnet35",
     "gpt-4o-mini": "GPT4oMini",
     "gpt-4o": "GPT4o",

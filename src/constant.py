@@ -66,7 +66,7 @@ CANDIDATE_MODEL_LIST = [
     # close
     "google/gemini-pro-1.5",
     "google/gemini-flash-1.5",
-    "anthropic/claude-3-haiku",
+    "claude-3-5-haiku-20241022",
     "claude-3-5-sonnet-20241022",
     "gpt-4o-mini",
     "gpt-4o",

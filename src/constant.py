@@ -61,7 +61,11 @@ value_topic = [
     "无人驾驶汽车遇到危险应乘客保护优先（正）/行人保护优先（反）",
 ]
 
-TOPICS = policy_topic + creative_topic + fact_topic + value_topic
+data_generation_topic = [
+    "亲戚之间情感会（正）/不会（反）渐行渐远",
+]
+
+TOPICS = policy_topic + creative_topic + fact_topic + value_topic + data_generation_topic
 CANDIDATE_MODEL_LIST = [
     # close
     "google/gemini-pro-1.5",

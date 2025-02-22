@@ -44,7 +44,7 @@ def save_human_versus_msg(messages: List):
     
     st.success("Save successfully!")
     
-st.header("⚔️ Human vs Agent4DB")
+st.header("🗡️ Human vs Agent")
 st.info("👈 Please input your argument in the chat box.")
 
 if "human_messages" not in st.session_state:
@@ -53,7 +53,7 @@ if "button_state" not in st.session_state:
     st.session_state.button_state = False
     
 with st.sidebar:
-    st.subheader("人机对战\nHuman vs Agent4DB")
+    st.subheader("人机对战\nHuman vs Agent")
     prepare_topic = st.selectbox("Prepared Topic", options=TOPICS, help="choose a topic.")
     input_topic = st.text_input("Topic", key = "input_topic", help = "输入辩题")
     bot_model = st.selectbox("Model", key="model", options=CANDIDATE_MODEL_LIST, help="choose a model.")

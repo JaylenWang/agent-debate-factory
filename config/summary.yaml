@@ -7,8 +7,8 @@ reviewer:
   zh_pos: prompt/summary/reviewer_zh_pos.txt
   zh_neg: prompt/summary/reviewer_zh_neg.txt
 searcher:
-  en: prompt/searcher_en.txt
-  zh: prompt/searcher_zh.txt
+  en: prompt/searcher.txt
+  zh: prompt/searcher.txt
 system:
   en: prompt/summary/system_en.txt
   zh: prompt/summary/system_zh.txt

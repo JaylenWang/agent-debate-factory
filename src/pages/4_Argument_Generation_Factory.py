@@ -10,10 +10,10 @@ def clear_argument():
     st.session_state.argument_inputs = None
     
 
-st.header("🚘 Argument Assistant")
+st.header("🚘 Argument Generation Factory")
 
 with st.sidebar:
-    st.subheader("Agent4DB 立论助手\nArgument Assistant with Agent4DB")
+    st.subheader("立论工厂\nArgument Generation Factory")
     st.caption("输入辩题和持方，获取立论内容。")
     
     argument_topic = st.text_input("Topic", key="argument_topic", help="输入辩题", value="教师可以/不可以偏爱优等生")

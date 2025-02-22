@@ -21,15 +21,14 @@ def save_message(messages: list):
     st.success("对话已保存！")
     
 def app():
-    st.header(":crossed_swords: Self Duel. 自我对战")
-    st.info("Agent4Debate 自我对战，包括正方立论、反方立论、正方驳论、反方驳论、反方总结、正方总结。")
+    st.header(":crossed_swords: Agent Debate Arena  智能体对战")
+    st.info("智能体对战，包括正方立论、反方立论、正方驳论、反方驳论、反方总结、正方总结。")
     # 初始化会话状态
     if 'messages' not in st.session_state:
         st.session_state.messages = []
 
     with st.sidebar:
-        st.subheader("Agent4DB 自我对战\nSelf-Duel Debater with Agent4DB")
-        st.caption("Agent4DB: A multi-agent system of debate process, include argument, rebuttal and summary agent.")
+        st.subheader("智能体对战\nAgent Debate Arena")
         prepare_topic = st.selectbox("Prepared Topic", options=TOPICS, help="choose a topic.")
         input_topic = st.text_input("Topic", key="input_topic", help="输入辩题")
         pos_model = st.selectbox("Pro side", options=CANDIDATE_MODEL_LIST, index=0, help="选择正方模型", key="pos_model")

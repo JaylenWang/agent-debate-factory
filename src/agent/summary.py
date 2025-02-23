@@ -16,7 +16,7 @@ class SummaryAgent(BaseAgent):
             return self.user
         
         if last_speaker is self.get_agent(name = "searcher"):
-            if is_function_call(last_message) or "```tavily" in last_message:
+            if is_function_call(last_message) or "```search" in last_message:
                 return self.user
             if messages[-2]["name"] == "user" and "Error" in messages[-2]["content"]:
                 return self.get_agent(name="writer")

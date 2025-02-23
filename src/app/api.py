@@ -15,19 +15,6 @@ def create_app(argument_agent: "ArgumentAgent", rebuttal_agent: "RebuttalAgent",
         summary = "A multi-agent system of debate process, include argument, rebuttal and summary agent."
     )
     
-    # @app.exception_handler(Exception)
-    # async def global_exception_handler(request: Request, exc: Exception):
-    #     return JSONResponse(
-    #         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    #         content={
-    #             "detail": "An unexpected error occurred.", 
-    #             "input": request,
-    #             "error": str(exc)
-    #         },
-    #     )
-        
-    # app.add_exception_handler(Exception, global_exception_handler)
-    
     @app.get(
         "/v1/methods",
         response_model=MethodList,

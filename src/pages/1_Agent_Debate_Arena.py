@@ -84,12 +84,12 @@ def app():
             return 
         
         st.subheader("⚖️ Topic: " + topic)
-        st.success("Agent4DB 自我对战. *目前只支持中文.*")
+        st.success("智能体对战. *目前只支持中文.*")
         st.info("辩论开始！请等待信息生成，不要关闭页面！\n Debate start! Please wait for the agent to generate the message, do not close the pages.")
 
         # argument
         with st.chat_message("user", avatar=Image.open("figures/logo/pos.png")):
-            with st.spinner("Ageng4DB -> 正方立论中..."):
+            with st.spinner("论辩智能体 -> 正方立论中..."):
                 pos_argument_response = requests.post(BASE_URL + "v1/argument", json=pos_input).json()
                 pos_argument = pos_argument_response["Result"]
                 st.write("### 正方立论\n", pos_argument)

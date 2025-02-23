@@ -7,6 +7,7 @@ from autogen.code_utils import UNKNOWN, execute_code, extract_code, infer_lang
 from autogen.math_utils import get_answer
 from openai import OpenAI
 
+from src.agent.tool.zhipu_ai_unwarp import ZhipuSearchAPIWrapper
 from src.agent.database.db import get_cached_answer, save_query
 from src.agent.tool.tavily_ai_unwarp import TavilySearchAPIWrapper
 
@@ -98,7 +99,7 @@ def _is_termination_msg_debatechat(message):
     cb = extract_code(message)
     contain_code = False
     for c in cb:
-        if c[0] == "python" or c[0] == "wolfram" or c[0] == "tavily":
+        if c[0] == "python" or c[0] == "wolfram" or c[0] == "search":
             contain_code = True
             break
 
@@ -108,7 +109,7 @@ def _is_termination_msg_debatechat(message):
     return not contain_code and get_answer(message) is not None and get_answer(message) != ""
 
 class CustomDebateUserProxyAgent(UserProxyAgent):
-    """(Experimental) A MathChat agent that can handle Tavily queries."""
+    """(Experimental) A MathChat agent that can handle search queries."""
     MAX_CONSECUTIVE_AUTO_REPLY = 15  # maximum number of consecutive auto replies (subject to future change)
     DEFAULT_REPLY = "Continue. Please keep complete the instruction until you need to query. (If you have completed the task, please organize and refine your deliverables, then output \\boxed{finished}.)"
     
@@ -160,17 +161,18 @@ class CustomDebateUserProxyAgent(UserProxyAgent):
         self._previous_code = ""
         self.last_reply = None
     
-    def execute_one_tavily_query(self, query: str):
+    def execute_one_search_query(self, query: str):
         # search query in the local da
         cached_answer = get_cached_answer(query)
         if cached_answer is not None:
             return cached_answer[0], True
         
         #TODO
-        tavily = TavilySearchAPIWrapper()
-        output, is_success = tavily.run(query, max_results=5)
+        # search_engine = TavilySearchAPIWrapper()
+        search_engine = ZhipuSearchAPIWrapper()
+        output, is_success = search_engine.run(query, max_results=5)
         if output == "":
-            output = "Error: The tavily query is invalid."
+            output = "Error: The query is invalid."
             is_success = False
         
         # save query to the local db
@@ -178,16 +180,16 @@ class CustomDebateUserProxyAgent(UserProxyAgent):
             save_query(query, output)
         return output, is_success
 
-    def execute_batch_tavily_query(self, query: str):
+    def execute_batch_search_query(self, query: str):
         queies = query.split("\n")
         is_success = False
         outputs = ""
         for q in queies:
-            output, is_success = self.execute_one_tavily_query(q)
+            output, is_success = self.execute_one_search_query(q)
             if is_success:
                 outputs += output + "\n"
         if is_success is False:
-            outputs = "Error: The tavily query is invalid."
+            outputs = "Error: The search query is invalid."
             return outputs, is_success
 
         return outputs, True
@@ -210,9 +212,9 @@ class CustomDebateUserProxyAgent(UserProxyAgent):
         reply = ""
         for code_block in code_blocks:
             lang, code = code_block
-            if lang == "tavily":
+            if lang == "search":
                 # output, is_success = self.execute_one_tavily_query(code)
-                output, is_success = self.execute_batch_tavily_query(code)
+                output, is_success = self.execute_batch_search_query(code)
             else:
                 output = "Error: Unknown language or Tool name, please check it."
                 is_success = False

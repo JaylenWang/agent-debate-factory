@@ -8,6 +8,6 @@ def is_function_call(msg):
     cb = extract_code(msg)
     contain_code = False
     for c in cb:
-        if c[0] == "tavily":
+        if c[0] == "search":
             return True
     return False

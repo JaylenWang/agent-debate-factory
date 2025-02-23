@@ -19,7 +19,7 @@ class ArgumentAgent(BaseAgent):
             return self.user
         
         if last_speaker is self.get_agent(name="searcher"):
-            if is_function_call(last_message) or "```tavily" in last_message:
+            if is_function_call(last_message) or "```search" in last_message:
                 return self.user
             return self.user
 

@@ -2,14 +2,16 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 
+from src.agent.general_debate import GeneralDebateAgent
 from src.agent.argument import ArgumentAgent
 from src.agent.rebuttal import RebuttalAgent
 from src.agent.summary import SummaryAgent
 from src.app.models import (AgentDebugInput, AgentDebugOutput, AgentOutput,
-                            BaseInput, MethodList, RebuttalInput, SummaryInput)
+                            BaseInput, MethodList, RebuttalInput, SummaryInput,
+                            DebateInput)
 
 
-def create_app(argument_agent: "ArgumentAgent", rebuttal_agent: "RebuttalAgent", summary_agent: "SummaryAgent"):
+def create_app(general_debate_agent: "GeneralDebateAgent", rebuttal_agent: "RebuttalAgent", summary_agent: "SummaryAgent"):
     app = FastAPI(
         title = "DebateAgent",
         summary = "A multi-agent system of debate process, include argument, rebuttal and summary agent."
@@ -40,14 +42,49 @@ def create_app(argument_agent: "ArgumentAgent", rebuttal_agent: "RebuttalAgent",
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Position must be 'positive'/'正方' or 'negative'/'反方'."
             )
-        argument_agent.switch_prompt(lang=language, position=position)
+        general_debate_agent.switch_prompt(lang=language, position=position)
         rebuttal_agent.switch_prompt(lang=language, position=position)
         summary_agent.switch_prompt(lang=language, position=position)
         
         return AgentDebugOutput(
-            ArgumentPrompt=argument_agent.get_prompt(),
+            ArgumentPrompt=general_debate_agent.get_prompt(),
             RebuttalPrompt=rebuttal_agent.get_prompt(),
             SummaryPrompt=summary_agent.get_prompt()
+        )
+    
+    @app.post(
+        "/v1/debate",
+        response_model=AgentOutput,
+        status_code=status.HTTP_200_OK,
+    )
+    async def debate(input: DebateInput):
+        lang = input.Language
+        position = input.Position
+        model = input.Model
+        
+        if position == "positive" or position == "正方":
+            position = "pos"
+        elif position == "negative" or position == "反方":
+            position = "neg"
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Position must be 'positive'/'正方' or 'negative'/'反方'."
+            )
+        general_debate_agent.switch_prompt(lang=lang, position=position)
+        print("model", model)
+        general_debate_agent.switch_model(model = model)
+        
+        # argument_agent.switch_language(lang)
+        result = general_debate_agent.run(
+            topic = input.Topic,
+            position = input.Position,
+            dialogue_history = input.DialogueHistory
+        )
+        return AgentOutput(
+            Reference = result["reference"],
+            Result = result["result"],
+            ChatHistory = result["chat_history"]
         )
     
     @app.post(
@@ -69,14 +106,15 @@ def create_app(argument_agent: "ArgumentAgent", rebuttal_agent: "RebuttalAgent",
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Position must be 'positive'/'正方' or 'negative'/'反方'."
             )
-        argument_agent.switch_prompt(lang=lang, position=position)
+        general_debate_agent.switch_prompt(lang=lang, position=position)
         print("model", model)
-        argument_agent.switch_model(model = model)
+        general_debate_agent.switch_model(model = model)
         
         # argument_agent.switch_language(lang)
-        result = argument_agent.run(
+        result = general_debate_agent.run(
             topic = input.Topic,
-            position = input.Position
+            position = input.Position,
+            dialogue_history = input.DialogueHistory
         )
         return AgentOutput(
             Reference = result["reference"],

@@ -1,3 +1,4 @@
+import json
 import yaml
 from typing import List, Dict
 import glob
@@ -20,7 +21,7 @@ model_map = {
     "human": "human",
     "baseline": "baseline",
 }
-def save_zh_result(preset: str, topic: str, messages: List[Dict], pos_model: str, neg_model: str):
+def save_zh_result(preset: str, topic: str, messages: List[Dict], pos_model: str, neg_model: str, round_num: int):
     template = dict(
         motion = topic,
         pro_side = [dict(name = "正方")],
@@ -28,35 +29,19 @@ def save_zh_result(preset: str, topic: str, messages: List[Dict], pos_model: str
         pro_model = [dict(model = pos_model)],
         con_model = [dict(model = neg_model)],
         info_slide = "正反双方的举证责任相同",
-        speech_order = ["正方", "反方", "正方", "反方", "反方", "正方"],
     )
 
-    speech = [
-        dict(
-            debater_name = "正方",
-            content = messages[0]["content"]
-        ),
-        dict(
-            debater_name = "反方",
-            content = messages[1]["content"]
-        ),
-        dict(
-            debater_name = "正方",
-            content = messages[2]["content"]
-        ),
-        dict(
-            debater_name = "反方",
-            content = messages[3]["content"]
-        ),
-        dict(
-            debater_name = "反方",
-            content = messages[4]["content"]
-        ),
-        dict(
-            debater_name = "正方",
-            content = messages[5]["content"]
-        ),
-    ]
+    round_num *= 2
+    speech = []
+    for i in range(round_num):
+        if i % 2 == 0:
+            debater_name = "正方"
+        else:
+            debater_name = "反方"
+        speech.append(dict(
+            debater_name = debater_name,
+            content = messages[i]["content"]
+        ))
     
     file_root = os.path.join("output", preset)
     os.makedirs(os.path.join(file_root, "motion"), exist_ok=True)
@@ -87,3 +72,37 @@ def save_zh_result(preset: str, topic: str, messages: List[Dict], pos_model: str
     with open(f"{file_root}/motion/motion_list.txt", "a") as f:
         content = f"{preset}_zh_{pos_model}_{neg_model}_{ids}  {topic}\n"
         f.write(content)
+
+    os.makedirs(os.path.join(file_root, f"agent/{preset}_zh_{pos_model}_{neg_model}_{ids}"), exist_ok=True)
+    last_lines = []
+    # round_num *= 2
+    with open("log/agent/log.jsonl", "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():  # 跳过空行
+                last_lines.append(line)
+                if len(last_lines) > round_num:
+                    last_lines.pop(0)
+    
+    if last_lines:
+        # 解析JSON
+        # yaml.dump(
+        #     last_line,
+        #     open(f"{file_root}/agent/{preset}_zh_{pos_model}_{neg_model}_{ids}/agent_history.yml", "w"),
+        #     allow_unicode=True, sort_keys=False,
+        # )
+        for i in range(len(last_lines)):
+            chat_data = json.loads(last_lines[i])
+            chat_history = chat_data['chat_history']
+            
+            # 将chat_history格式化为易读的文本
+            formatted_history = []
+            for message in chat_history:
+                role = message.get('role', '')
+                name = message.get('name', '')
+                content = message.get('content', '')
+                
+                formatted_message = f"Role: {role}\nName: {name}\nContent:\n{content}\n{'='*50}\n"
+                formatted_history.append(formatted_message)
+            formatted_history_full = '\n'.join(formatted_history)
+            with open(f"{file_root}/agent/{preset}_zh_{pos_model}_{neg_model}_{ids}/agent_history_{i}.txt", 'w', encoding='utf-8') as f:
+                f.write(formatted_history_full)

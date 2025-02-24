@@ -9,6 +9,9 @@ class BaseInput(BaseModel):
     Position: str
     Language: str = "zh"
     Model: Optional[str] = "deepseek-chat"
+
+class DebateInput(BaseInput):
+    DialogueHistory: str
     
 class RebuttalInput(BaseInput):
     PositiveArgument: str

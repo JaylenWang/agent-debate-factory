@@ -1,0 +1,21 @@
+memorizer:
+  en: prompt/general_debate/memorizer_zh.txt
+  zh: prompt/general_debate/memorizer_zh.txt
+planner:
+  en: prompt/general_debate/planner_zh.txt
+  zh: prompt/general_debate/planner_zh.txt
+searcher:
+  en: prompt/searcher_zh.txt
+  zh: prompt/searcher_zh.txt
+system:
+  en: prompt/general_debate/system_zh.txt
+  zh: prompt/general_debate/system_zh.txt
+task:
+  en: prompt/general_debate/task_zh.txt
+  zh: prompt/general_debate/task_zh.txt
+debater:
+  en: prompt/general_debate/debater_zh.txt
+  zh: prompt/general_debate/debater_zh.txt
+reviewer:
+  en: prompt/general_debate/reviewer_zh.txt
+  zh: prompt/general_debate/reviewer_zh.txt

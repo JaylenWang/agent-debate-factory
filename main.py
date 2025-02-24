@@ -5,6 +5,7 @@ import autogen
 import uvicorn
 import yaml
 
+from src.agent.general_debate import GeneralDebateAgent
 from src.agent import (ArgumentAgent, CustomDebateUserProxyAgent,
                        RebuttalAgent, Role, SummaryAgent)
 from src.app import create_app
@@ -54,6 +55,22 @@ def load_agent(name, config):
     
     return agent
 
+def load_general_debate_agent(name, config):
+    memorizer = Role("memorizer", prompt_map=config.get("memorizer"), llm_config=llm_config)
+    planner = Role("planner", prompt_map=config.get("planner"), llm_config=llm_config)
+    debater = Role("debater", prompt_map=config.get("debater"), llm_config=llm_config)
+    reviewer = Role("reviewer", prompt_map=config.get("reviewer"), llm_config=llm_config)
+    agent = GeneralDebateAgent(
+        roles = [memorizer, searcher, planner, debater, reviewer], 
+        user = user, 
+        llm_config=llm_config,
+        task_prompt_map = config.get("task"),
+        system_prompt_map = config.get("system"),
+        max_round=15,
+    )
+    
+    return agent
+
 # init config
 config = get_args() 
 
@@ -69,11 +86,14 @@ rebuttal_config = yaml.load(
 summary_config = yaml.load(
     open("config/summary.yaml", 'r'), Loader=yaml.FullLoader
 )
+general_debate_config = yaml.load(
+    open("config/general_debate.yaml", 'r'), Loader=yaml.FullLoader
+)
 
 init_db()
 
 # load prompt
-searcher = Role("searcher", prompt_map=argument_config.get("searcher"), llm_config=llm_config, seed=config.seed)
+searcher = Role("searcher", prompt_map=general_debate_config.get("searcher"), llm_config=llm_config, seed=config.seed)
 
 user = CustomDebateUserProxyAgent(
     name = "admin",
@@ -88,7 +108,10 @@ argument_agent = load_agent(name = "argument", config = argument_config)
 rebuttal_agent = load_agent(name = "rebuttal", config = rebuttal_config)
 ## summary
 summary_agent = load_agent(name = "summary", config = summary_config)
+# general debate
+general_debate_agent = load_general_debate_agent(name = "general_debate", config = general_debate_config)
 
-app = create_app(argument_agent, rebuttal_agent, summary_agent)
+app = create_app(general_debate_agent, rebuttal_agent, summary_agent)
+# app = create_app(argument_agent, rebuttal_agent, summary_agent)
 
 uvicorn.run(app, host="127.0.0.1", port=config.port, log_level="info")

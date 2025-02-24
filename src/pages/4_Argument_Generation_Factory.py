@@ -4,7 +4,7 @@ import requests
 import streamlit as st
 from constant import TOPICS, CANDIDATE_MODEL_LIST
 
-BASE_URL = "http://127.0.0.1:8081/"
+BASE_URL = "http://127.0.0.1:8082/"
 
 def clear_argument():
     st.session_state.argument_inputs = None

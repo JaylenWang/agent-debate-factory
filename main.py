@@ -1,5 +1,6 @@
 import argparse
 import os
+import shutil
 
 import autogen
 import uvicorn
@@ -14,7 +15,7 @@ from src.agent.database.db import init_db
 
 def get_args():
     parser = argparse.ArgumentParser(description='Debate Agent')
-    parser.add_argument('--port', type=int, default=8081, help='Port number')
+    parser.add_argument('--port', type=int, default=8082, help='Port number')
     parser.add_argument('--seed', type=int, default=3347, help='Seed number')
     parser.add_argument('--use_synthesizer', type=bool, default=True, help='Use synthesizer')
     return parser.parse_args()
@@ -73,6 +74,11 @@ def load_general_debate_agent(name, config):
 
 # init config
 config = get_args() 
+
+# 删除.cache文件夹
+if os.path.exists(".cache/41"):
+    shutil.rmtree(".cache/41")
+
 
 llm_config = autogen.config_list_from_json(
     "OAI_CONFIG_LIST", filter_dict={"model": "google/gemini-pro-1.5"}

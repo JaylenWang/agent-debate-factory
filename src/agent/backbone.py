@@ -131,3 +131,7 @@ class BaseAgent(ABC):
     @abstractmethod
     def get_reference(self, **kwargs):
         pass
+
+    def reset_chat(self):
+        """重置GroupChat的消息历史"""
+        self.groupchat.messages = []

@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 
 import requests
@@ -7,10 +9,13 @@ from PIL import Image
 from utils import save_zh_result
 from constant import TOPICS, CANDIDATE_MODEL_LIST
 
-BASE_URL = "http://127.0.0.1:8081/"
+BASE_URL = "http://127.0.0.1:8082/"
 
 def clear_chat_history():
     st.session_state.messages = []
+    # 删除.cache文件夹
+    if os.path.exists(".cache/41"):
+        shutil.rmtree(".cache/41")
 
 def save_message(messages: list, round_num: int):
     if len(messages) > 6:
@@ -22,7 +27,7 @@ def save_message(messages: list, round_num: int):
     
 def app():
     st.header(":crossed_swords: Agent Debate Arena  智能体对战")
-    st.info("智能体对战，包括正方立论、反方立论、正方驳论、反方驳论、反方总结、正方总结。")
+    st.info("智能体对战。")
     # 初始化会话状态
     if 'messages' not in st.session_state:
         st.session_state.messages = []

@@ -12,7 +12,7 @@ POS_LOGO="figures/logo/pos.png"
 HUMAN_LOGO="figures/logo/human.png"
 NEG_LOGO="figures/logo/neg.png"
 
-BASE_URL = "http://127.0.0.1:8081/"
+BASE_URL = "http://127.0.0.1:8082/"
 
 def clear_chat_history():
     st.session_state.human_messages = []

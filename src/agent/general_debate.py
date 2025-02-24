@@ -96,6 +96,9 @@ class GeneralDebateAgent(BaseAgent):
         return self.postprocess(result)
     
     def run(self, topic, position, dialogue_history) -> Dict:
+        # 在开始新对话前重置消息历史
+        # self.reset_chat()
+        
         topic = self.task_prompt.format(
             Topic=topic,
             Position=position,

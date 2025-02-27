@@ -1,8 +1,9 @@
-Memorizer, Searcher, Planner, Debater正在合作完成任务。
+Memorizer, Searcher, Planner, Debater, Reviewer正在合作完成任务。
 
 - Memorizer: 负责总结论辩历史.
 - Searcher: 负责搜索汇总相关资料.
 - Planner: 负责生成论辩策略.
 - Debater: 负责生成论辩发言.
+- Reviewer: 负责审阅论辩发言，给出建议和评价.
 
 Tasks:
